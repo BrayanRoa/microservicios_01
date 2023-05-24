@@ -4,6 +4,7 @@ import { PersonEntity } from '../entity/person.entity';
 import { DocumentService } from '../../document_type/service/document.service';
 import { RoleService } from '../../role/services/role.service';
 
+import bcrypt from 'bcrypt';
 export class PersonService extends BaseService<PersonEntity>{
 
     constructor(
@@ -32,7 +33,7 @@ export class PersonService extends BaseService<PersonEntity>{
             const role = await this.roleService.findById(person.role_id)
             if (document && role) {
                 const newPerson = (await this.execRepository).create(person)
-                // newPerson.password = await bcrypt.hash(newPerson.password, 10) 
+                newPerson.password = await bcrypt.hash(newPerson.password, 10) 
                 newPerson.role = role
                 newPerson.document_type = document
                 return (await this.execRepository).save(newPerson)
